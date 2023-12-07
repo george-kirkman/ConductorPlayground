@@ -1,0 +1,4 @@
+github.com/conductor-sdk/conductor-go v1.3.7 h1:PLYmYQyVgb9NsurFNTexVcTwCYmNkschyWEv2QXiDAE=
+github.com/conductor-sdk/conductor-go v1.3.7/go.mod h1:2c4F/i3UTsEx6kBueQMwf4k1lF5dfOGEztm11c1m54I=
+github.com/netflix/conductor/client/go v0.0.0-20210401201512-216960d11116 h1:mSgo69ZcAIyp0lfNextjrNbVijpUeZq8/XNeDNBVkxw=
+github.com/netflix/conductor/client/go v0.0.0-20210401201512-216960d11116/go.mod h1:LV0X0fPU1FeRMvky8Qww+Rifb6ENlKwRSUvv3qcJ07Q=
