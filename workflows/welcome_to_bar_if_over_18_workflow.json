@@ -1,0 +1,61 @@
+{
+  "createTime": 1702318666745,
+  "updateTime": 1702318757665,
+  "name": "WelcomeToBarIfOver18",
+  "description": "Takes an age input and greets adults warmly, but turns away children.",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "CheckIsOver18",
+      "taskReferenceName": "checkisover18_ujwnm_ref",
+      "inputParameters": {
+        "Age": "${workflow.input.Age}"
+      },
+      "type": "SIMPLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    },
+    {
+      "name": "WelcomeToBar",
+      "taskReferenceName": "welcometobar_tewai_ref",
+      "inputParameters": {
+        "CheckIsOver18Result": "${checkisover18_ujwnm_ref.output}"
+      },
+      "type": "SIMPLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    }
+  ],
+  "inputParameters": [
+    "Age"
+  ],
+  "outputParameters": {
+    "BarGreetings": "${welcometobar_tewai_ref.output.BarGreetings}"
+  },
+  "failureWorkflow": "",
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "james.buddrige@xapien.com",
+  "timeoutPolicy": "TIME_OUT_WF",
+  "timeoutSeconds": 60,
+  "variables": {},
+  "inputTemplate": {},
+  "onStateChange": {}
+}

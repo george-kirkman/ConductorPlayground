@@ -1,0 +1,27 @@
+{
+  "createTime": 1702318539475,
+  "createdBy": "james.buddrige@xapien.com",
+  "name": "CheckIsOver18",
+  "description": "Simple check if input Age is > 18",
+  "retryCount": 3,
+  "timeoutSeconds": 3600,
+  "inputKeys": [
+    "Age"
+  ],
+  "outputKeys": [
+    "IsOver18"
+  ],
+  "timeoutPolicy": "TIME_OUT_WF",
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 60,
+  "responseTimeoutSeconds": 600,
+  "concurrentExecLimit": 0,
+  "inputTemplate": {
+    "Age": 25
+  },
+  "rateLimitPerFrequency": 0,
+  "rateLimitFrequencyInSeconds": 1,
+  "ownerEmail": "james.buddrige@xapien.com",
+  "pollTimeoutSeconds": 3600,
+  "backoffScaleFactor": 1
+}
