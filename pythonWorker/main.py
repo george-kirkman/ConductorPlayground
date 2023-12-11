@@ -7,15 +7,15 @@ from conductor.client.worker.worker import Worker
 from multiprocessing import set_start_method
 
 # Import our own worker
-from worker import SimplePythonWorker
+from worker import SimplePythonWorker, BarBouncer
 
 
 set_start_method('fork')
 ############################################
 
 SERVER_API_URL = 'https://play.orkes.io/api'
-KEY_ID = '4af1da52-28d5-489c-b9b1-b7ffc32a0fe8'
-KEY_SECRET = 'fLm9JZ1d5pnBxmtOXnaGiea6u84SQ1u8TaNvxjwx2FcHdCDS'
+KEY_ID = "4af1da52-28d5-489c-b9b1-b7ffc32a0fe8"
+KEY_SECRET = "fLm9JZ1d5pnBxmtOXnaGiea6u84SQ1u8TaNvxjwx2FcHdCDS"
 
 configuration = Configuration(
     server_api_url=SERVER_API_URL,
@@ -30,17 +30,12 @@ workers = [
     SimplePythonWorker(
         task_definition_name='DoThign',
     ),
-    # SimplePythonWorker(
-    #     task_definition_name="BarBouncer",
-    # ),
+    BarBouncer(
+        task_definition_name='WelcomeToBar'
+    )
     # Worker(
-    #     task_definition_name='DoThign',
+    #     task_definition_name='python_execute_function_task',
     #     execute_function=SimplePythonWorker.execute,
-    #     poll_interval=1,
-    # ),
-    # Worker(
-    #     task_definition_name='BarBouncer',
-    #     execute_function=RandomFunction(),
     #     poll_interval=250,
     #     domain='test'
     # )
@@ -56,8 +51,9 @@ with TaskHandler(workers, configuration, scan_for_annotated_workers=False) as ta
     input("Press enter to exit")
     print("ended processes")
 
+
 # from conductor.client.worker.worker_task import WorkerTask
-# 
+
 # @WorkerTask(task_definition_name='python_annotated_task', worker_id='decorated', poll_interval=200.0)
 # def python_annotated_task(input) -> object:
 #     return {'message': 'python is so cool :)'}
