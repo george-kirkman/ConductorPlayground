@@ -4,6 +4,10 @@ from conductor.client.http.models.task_result_status import TaskResultStatus
 from conductor.client.worker.worker_interface import WorkerInterface
 from conductor.client.worker.worker_task import WorkerTask
 
+# HEY
+# If you're using annotated wokers in main.py, then comment these out!!
+# These are example functions which use task definition names that don't exist.
+# So they'll spam the terminal output with a bunch of errors.
 
 class FaultyExecutionWorker(WorkerInterface):
     def execute(self, task: Task) -> TaskResult:
@@ -39,7 +43,7 @@ class ClassWorkerWithDomain(WorkerInterface):
         return task_result
 
 
-@WorkerTask(task_definition_name='DoThign')
+@WorkerTask(task_definition_name='test_python_decorated_worker')
 def decorated_worker(obj: object) -> object:
     return {
         'worker_style': 'function',

@@ -1,3 +1,5 @@
+import uuid
+
 from conductor.client.configuration.settings.authentication_settings import AuthenticationSettings
 from conductor.client.configuration.configuration import Configuration
 from conductor.client.automator.task_handler import TaskHandler
@@ -8,7 +10,6 @@ from multiprocessing import set_start_method
 
 # Import our own worker
 from worker import SimplePythonWorker, BarBouncer
-
 
 set_start_method('fork')
 ############################################
@@ -27,23 +28,23 @@ configuration = Configuration(
 )
 
 workers = [
-    SimplePythonWorker(
-        task_definition_name='DoThign',
-    ),
-    BarBouncer(
-        task_definition_name='WelcomeToBar'
-    )
-    # Worker(
-    #     task_definition_name='python_execute_function_task',
-    #     execute_function=SimplePythonWorker.execute,
-    #     poll_interval=250,
-    #     domain='test'
+    # SimplePythonWorker(
+    #     task_definition_name='DoThign',
+    # ),
+    # BarBouncer(
+    #     task_definition_name='WelcomeToBar'
     # )
+    Worker(
+        task_definition_name='DoThign',
+        execute_function=SimplePythonWorker.is_over_18_using_input_object,
+        poll_interval=1,
+        #domain='test' # Not sure what this does yet
+    )
 ]
 
 # If there are decorated workers in your application, scan_for_annotated_workers should be set
 # default value of scan_for_annotated_workers is False
-with TaskHandler(workers, configuration, scan_for_annotated_workers=False) as task_handler:
+with TaskHandler(workers, configuration, scan_for_annotated_workers=True) as task_handler:
     print("starting processes")
     for worker in workers:
         print(worker.task_definition_name)
@@ -52,8 +53,17 @@ with TaskHandler(workers, configuration, scan_for_annotated_workers=False) as ta
     print("ended processes")
 
 
-# from conductor.client.worker.worker_task import WorkerTask
+from conductor.client.worker.worker_task import WorkerTask
 
 # @WorkerTask(task_definition_name='python_annotated_task', worker_id='decorated', poll_interval=200.0)
 # def python_annotated_task(input) -> object:
 #     return {'message': 'python is so cool :)'}
+
+# Here is another way to make a function execute as a task. Avoids the faff of wrapping in Worker.
+# Probably the one we want to use most ?
+@WorkerTask(task_definition_name='DoThign', worker_id='decorated', poll_interval=1.0)
+def is_over_18_using_input_object(task_input) -> dict[str, bool]:
+    age = task_input['Age']
+    isover18 = True if age > 18 else False
+    result = {"IsOver18": isover18}
+    return result

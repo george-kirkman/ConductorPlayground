@@ -24,6 +24,39 @@ class SimplePythonWorker(WorkerInterface):
         task_result.add_output_data('IsOver18', isover18)
         task_result.status = TaskResultStatus.COMPLETED
         return task_result
+    
+    # Here we're exploring the different kinds of functions that can go in the Worker `execute_function` parameter.
+    # They have to be static methods - don't necessarily need to be in a class (all functions outside of classes are already static)
+    # but might be nice for grouping etc.
+    @staticmethod
+    def is_over_18_using_task_input(task: Task) -> TaskResult:
+        task_input = task.input_data
+        logger.debug("-------- input: ")
+        logger.debug(task_input)
+        age = task_input['Age']
+        isover18 = True if age > 18 else False
+        task_result = TaskResult(
+            task_id=task.task_id,
+            workflow_instance_id=task.workflow_instance_id,
+            worker_id='your_custom_id'
+        )
+        task_result.add_output_data("IsOver18", isover18)
+        task_result.status = TaskResultStatus.COMPLETED
+        return task_result
+
+    # THIS ONE DOES NOT WORK¬!!!!! CONDUCT|oR STOOPID 
+    # worker/worker.py Line 68 doesn't use the correct input.
+    # should be task_result.output_data = self.execute_function(execute_function_input)
+    
+    # So for now, we're gonna avoid this usage. Might raise a PR! :)
+    @staticmethod
+    def is_over_18_using_input_object(task_input) -> dict[str, bool]:
+        logger.debug("-------- input: ")
+        logger.debug(task_input)
+        age = task_input['Age']
+        isover18 = True if age > 18 else False
+        result = {"IsOver18": isover18}
+        return result
 
     def get_polling_interval_in_seconds(self) -> float:
         # poll every 500ms
