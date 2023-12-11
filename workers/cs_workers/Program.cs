@@ -30,16 +30,16 @@ for (var i = 0; i < 1; i++)
 
 // WORKERS!
 
-// var host1 = WorkflowTaskHost.CreateWorkerHost(
-//     config1,
-//     logLevel: LogLevel.Debug,
-//     workers: new SimpleWorker());
-// var host2 = WorkflowTaskHost.CreateWorkerHost(
-//     config1,
-//     logLevel: LogLevel.Debug,
-//     workers: new BarBouncer());
-// await host1.StartAsync();
-// await host2.StartAsync();
-// Console.WriteLine("Done starting worker hosts");
-// Console.ReadLine();
-// Console.WriteLine("Super done");
+var host1 = WorkflowTaskHost.CreateWorkerHost(
+    config1,
+    logLevel: LogLevel.Debug,
+    workers: new SimpleWorker());
+var host2 = WorkflowTaskHost.CreateWorkerHost(
+    config1,
+    logLevel: LogLevel.Debug,
+    workers: new BarBouncer());
+await host1.StartAsync();
+await host2.StartAsync();
+Console.WriteLine("Done starting worker hosts");
+Console.ReadLine();
+Console.WriteLine("Super done");
