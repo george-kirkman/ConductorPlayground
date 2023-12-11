@@ -18,14 +18,17 @@ var config1 = new Configuration()
     //BasePath = "http://localhost:8080/api"
 };
 
+// Start workflow
 var executor = new WorkflowExecutor(config1);
-for (var i = 0; i < 100; i++)
+for (var i = 0; i < 1; i++)
 {
     Console.WriteLine($"Executing workflow {i}");
     executor.StartWorkflow(new StartWorkflowRequest(
         input: new Dictionary<string, object>() {{"Age", new Random().NextInt64(30)}},
         name: "DoThignWorkflow"));
 }
+
+// WORKERS!
 
 var host1 = WorkflowTaskHost.CreateWorkerHost(
     config1,
@@ -37,6 +40,6 @@ var host2 = WorkflowTaskHost.CreateWorkerHost(
     workers: new BarBouncer());
 await host1.StartAsync();
 await host2.StartAsync();
-Console.WriteLine("Done");
+Console.WriteLine("Done starting worker hosts");
 Console.ReadLine();
 Console.WriteLine("Super done");

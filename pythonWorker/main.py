@@ -8,15 +8,14 @@ from multiprocessing import set_start_method
 
 # Import our own worker
 from worker import SimplePythonWorker
-from moreWorkers import *
 
 
 set_start_method('fork')
 ############################################
 
-SERVER_API_URL = 'http://localhost:8080/api'
-KEY_ID = '<KEY_ID>'
-KEY_SECRET = '<KEY_SECRET>'
+SERVER_API_URL = 'https://play.orkes.io/api'
+KEY_ID = '4af1da52-28d5-489c-b9b1-b7ffc32a0fe8'
+KEY_SECRET = 'fLm9JZ1d5pnBxmtOXnaGiea6u84SQ1u8TaNvxjwx2FcHdCDS'
 
 configuration = Configuration(
     server_api_url=SERVER_API_URL,
@@ -28,12 +27,20 @@ configuration = Configuration(
 )
 
 workers = [
-    ClassWorker(
-        task_definition_name='python_task_example',
+    SimplePythonWorker(
+        task_definition_name='DoThign',
     ),
+    # SimplePythonWorker(
+    #     task_definition_name="BarBouncer",
+    # ),
     # Worker(
-    #     task_definition_name='python_execute_function_task',
+    #     task_definition_name='DoThign',
     #     execute_function=SimplePythonWorker.execute,
+    #     poll_interval=1,
+    # ),
+    # Worker(
+    #     task_definition_name='BarBouncer',
+    #     execute_function=RandomFunction(),
     #     poll_interval=250,
     #     domain='test'
     # )
@@ -41,15 +48,16 @@ workers = [
 
 # If there are decorated workers in your application, scan_for_annotated_workers should be set
 # default value of scan_for_annotated_workers is False
-with TaskHandler(workers, configuration, scan_for_annotated_workers=True) as task_handler:
+with TaskHandler(workers, configuration, scan_for_annotated_workers=False) as task_handler:
     print("starting processes")
     for worker in workers:
         print(worker.task_definition_name)
     task_handler.start_processes()
+    input("Press enter to exit")
     print("ended processes")
 
-from conductor.client.worker.worker_task import WorkerTask
-
-@WorkerTask(task_definition_name='python_annotated_task', worker_id='decorated', poll_interval=200.0)
-def python_annotated_task(input) -> object:
-    return {'message': 'python is so cool :)'}
+# from conductor.client.worker.worker_task import WorkerTask
+# 
+# @WorkerTask(task_definition_name='python_annotated_task', worker_id='decorated', poll_interval=200.0)
+# def python_annotated_task(input) -> object:
+#     return {'message': 'python is so cool :)'}

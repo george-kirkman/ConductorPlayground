@@ -39,7 +39,7 @@ class ClassWorkerWithDomain(WorkerInterface):
         return task_result
 
 
-@WorkerTask(task_definition_name='test_python_decorated_worker')
+@WorkerTask(task_definition_name='DoThign')
 def decorated_worker(obj: object) -> object:
     return {
         'worker_style': 'function',
