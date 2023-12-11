@@ -1,0 +1,9 @@
+{
+  "search_specifications": 
+  [
+    {
+      "DataProvider": "string (technically Enum: Sayari, OpenCorporates, CompaniesHouse etc.)",
+      "SearchRequest": "object - could be different shapes, (e.g. Sayari search would just be Person name maybe, LinkedIn could be person and context"
+    }
+  ]
+}

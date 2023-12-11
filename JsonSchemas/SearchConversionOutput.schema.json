@@ -1,0 +1,19 @@
+{
+  "search_duration": "int - made up time in ms",
+  "graph_fragment": {
+    "nodes": [
+      {
+        "type": "string (enum), e.g. Person, Organisation",
+        "gloss_text": "string", 
+        "id": "guid (string)"
+      }
+    ],
+    "edges": [
+      {
+        "type": "string (enum), e.g. works_at",
+        "from_node_id": "guid (string)",
+        "to_node_id": "guid (string)"
+      }
+    ]
+  }
+}

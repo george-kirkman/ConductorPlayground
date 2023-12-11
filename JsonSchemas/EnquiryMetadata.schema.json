@@ -1,0 +1,17 @@
+{
+  "enquiry_id": "string in format Guid",
+  "subject": {
+    "item": "string",
+    "type": "string (technically Enum: Person/Organisation)"
+  },
+  "context": [
+    {
+      "item": "string",
+      "type": "string (technically Enum: Person/Organisation)"
+    },
+    {
+      "item": "string",
+      "type": "string (technically Enum: Person/Organisation)"
+    }
+  ]
+}
