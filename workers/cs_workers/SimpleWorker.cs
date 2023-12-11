@@ -12,7 +12,7 @@ public class SimpleWorker : IWorkflowTask
     public string TaskType { get; }
     public WorkflowTaskExecutorConfiguration WorkerSettings { get; }
 
-    public SimpleWorker(string taskType = "DoThign")
+    public SimpleWorker(string taskType = "CheckIsOver18")
     {
         TaskType = taskType;
         WorkerSettings = new WorkflowTaskExecutorConfiguration() {PollInterval = TimeSpan.FromSeconds(3)};
@@ -25,7 +25,7 @@ public class SimpleWorker : IWorkflowTask
 
         var isOver18 = age > 18;
 
-        Console.WriteLine("DoThign Happened!");
+        Console.WriteLine("CheckIsOver18 Happened!");
         return task.Completed(outputData: new Dictionary<string, object>()
             {{"blah", "omg it works"}, {"IsOver18", isOver18}});
 
@@ -46,8 +46,8 @@ public class BarBouncer : IWorkflowTask
     public TaskResult Execute(Task task)
     {
         var input = task.InputData;
-        var doThingResult = JObject.FromObject(input["DoThignResult"]);
-        var isOver18 = (bool) doThingResult["IsOver18"];
+        var checkIsOver18Result = JObject.FromObject(input["CheckIsOver18Result"]);
+        var isOver18 = (bool) checkIsOver18Result["IsOver18"];
 
         var message = isOver18
             ? "Hello there! Take a nice cool refreshing beverage on the house!"

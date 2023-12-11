@@ -35,7 +35,7 @@ workers = [
     #     task_definition_name='WelcomeToBar'
     # )
     Worker(
-        task_definition_name='DoThign',
+        task_definition_name='CheckIsOver18',
         execute_function=SimplePythonWorker.is_over_18_using_input_object,
         poll_interval=1,
         #domain='test' # Not sure what this does yet
@@ -61,7 +61,7 @@ from conductor.client.worker.worker_task import WorkerTask
 
 # Here is another way to make a function execute as a task. Avoids the faff of wrapping in Worker.
 # Probably the one we want to use most ?
-@WorkerTask(task_definition_name='DoThign', worker_id='decorated', poll_interval=1.0)
+@WorkerTask(task_definition_name='CheckIsOver18', worker_id='decorated', poll_interval=1.0)
 def is_over_18_using_input_object(task_input) -> dict[str, bool]:
     age = task_input['Age']
     isover18 = True if age > 18 else False

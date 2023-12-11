@@ -68,8 +68,8 @@ class BarBouncer(WorkerInterface):
         task_input = task.input_data
         logger.debug("-------- input: ")
         logger.debug(task_input)
-        doThingResult = task_input['DoThignResult']
-        isOver18 = doThingResult["IsOver18"]
+        checkIsOver18Result = task_input['CheckIsOver18Result']
+        isOver18 = checkIsOver18Result["IsOver18"]
         if isOver18:
             message = "Hello there! Take a nice cool refreshing beverage on the house!"
         else:
