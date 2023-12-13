@@ -2,8 +2,15 @@
   "search_specifications": 
   [
     {
-      "DataProvider": "string (technically Enum: Sayari, OpenCorporates, CompaniesHouse etc.)",
-      "SearchRequest": "object - could be different shapes, (e.g. Sayari search would just be Person name maybe, LinkedIn could be person and context"
+      "search_specification": {
+        "data_provider": "string (technically Enum: Sayari, OpenCorporates, CompaniesHouse etc.)",
+        "search_request": "object - could be different shapes, (e.g. Sayari search would just be Person name maybe, LinkedIn could be person and context"
+      },
+      "enquiry_metadata": {
+        "enquiry_id": "string (technically Enum: Sayari, OpenCorporates, CompaniesHouse etc.)",
+        "subject": "object",
+        "context": "object"
+      }
     }
   ]
 }
