@@ -1,0 +1,119 @@
+{
+  "createTime": 1702054425136,
+  "updateTime": 1702565641063,
+  "name": "MockEnquiry",
+  "description": "Goes through mock enquiry generator, search generators for multiple searchers, search processors for each server, and a final \"ReportGen\" step to aggregate results. Searchers will return a collection of mock results, which should be something that the Workflow can handle concurrently with multiple workers.",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "initialise_enquiry",
+      "taskReferenceName": "initialiseenquiry_6kodj_ref",
+      "inputParameters": {
+        "Context": "${workflow.input.Context}",
+        "Subject": "${workflow.input.Subject}"
+      },
+      "type": "SIMPLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    },
+    {
+      "name": "search_generator",
+      "taskReferenceName": "searchgenerator_lv4x3_ref",
+      "inputParameters": {
+        "enquiry_metadata": "${initialiseenquiry_6kodj_ref.output}"
+      },
+      "type": "SIMPLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    },
+    {
+      "name": "run_collections_parallel",
+      "taskReferenceName": "runcollectionsparallel_fn5c4_ref",
+      "inputParameters": {
+        "forkTaskWorkflow": "CollectionRunnerFlow",
+        "forkTaskInputs": "${searchgenerator_lv4x3_ref.output.search_specifications}"
+      },
+      "type": "FORK_JOIN_DYNAMIC",
+      "decisionCases": {},
+      "dynamicForkTasksParam": "forkTaskWorkflow",
+      "dynamicForkTasksInputParamName": "forkTaskInputs",
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    },
+    {
+      "name": "join_task",
+      "taskReferenceName": "join_task_ref",
+      "inputParameters": {
+        "processed_searches": "${runcollectionsparallel_fn5c4_ref.output}"
+      },
+      "type": "JOIN",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    },
+    {
+      "name": "ReportGen",
+      "taskReferenceName": "reportgen_0mkkp_ref",
+      "inputParameters": {
+        "Results": "${join_task_ref.output}",
+        "SearchSpecifications": "${searchgenerator_lv4x3_ref.output}"
+      },
+      "type": "SIMPLE",
+      "decisionCases": {},
+      "defaultCase": [],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "onStateChange": {}
+    }
+  ],
+  "inputParameters": [
+    "Subject",
+    "Context"
+  ],
+  "outputParameters": {},
+  "failureWorkflow": "",
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "james.buddrige@xapien.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {},
+  "onStateChange": {}
+}

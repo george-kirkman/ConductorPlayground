@@ -1,0 +1,21 @@
+{
+  "createTime": 1702055002338,
+  "createdBy": "james.buddrige@xapien.com",
+  "name": "sayari_search",
+  "description": "Mock sayari search - returns fake sayari search results",
+  "retryCount": 3,
+  "timeoutSeconds": 3600,
+  "inputKeys": [],
+  "outputKeys": [],
+  "timeoutPolicy": "TIME_OUT_WF",
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 60,
+  "responseTimeoutSeconds": 600,
+  "concurrentExecLimit": 0,
+  "inputTemplate": {},
+  "rateLimitPerFrequency": 0,
+  "rateLimitFrequencyInSeconds": 1,
+  "ownerEmail": "james.buddrige@xapien.com",
+  "pollTimeoutSeconds": 3600,
+  "backoffScaleFactor": 1
+}

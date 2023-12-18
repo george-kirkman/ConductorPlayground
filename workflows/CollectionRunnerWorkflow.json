@@ -1,0 +1,261 @@
+{
+  "createTime": 1702055399591,
+  "updateTime": 1702900944189,
+  "name": "CollectionRunnerFlow",
+  "description": "Workflow to take a search specification and run the appropriate searcher task and processor.",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "search_spec_switch",
+      "taskReferenceName": "searchspecswitch_3istt_ref",
+      "inputParameters": {
+        "data_provider_value": "${workflow.input.search_specification.data_provider}"
+      },
+      "type": "SWITCH",
+      "decisionCases": {
+        "CompaniesHouse": [
+          {
+            "name": "companies_house_search",
+            "taskReferenceName": "companies_house_search_awdld_ref",
+            "inputParameters": {
+              "search_specification": "${workflow.input.search_specification}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          },
+          {
+            "name": "companies_house_convert",
+            "taskReferenceName": "companies_house_convert",
+            "inputParameters": {
+              "companies_house_search_result": "${companies_house_search_awdld_ref.output.search_results}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          }
+        ],
+        "Sayari": [
+          {
+            "name": "sayari_search",
+            "taskReferenceName": "sayari_search_bigaq_ref",
+            "inputParameters": {
+              "search_specification": "${workflow.input.search_specification}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          },
+          {
+            "name": "sayari_convert",
+            "taskReferenceName": "sayari_convert",
+            "inputParameters": {
+              "sayari_search_result": "${sayari_search_bigaq_ref.output.search_results}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          }
+        ],
+        "OpenCorporates": [
+          {
+            "name": "open_corporates_search",
+            "taskReferenceName": "open_corporates_search_s9r9i_ref",
+            "inputParameters": {
+              "search_specification": "${workflow.input.search_specification}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          },
+          {
+            "name": "open_corporates_convert",
+            "taskReferenceName": "open_corporates_convert",
+            "inputParameters": {
+              "open_corporates_search_results": "${open_corporates_search_s9r9i_ref.output.search_results}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          }
+        ],
+        "Google": [
+          {
+            "name": "google_search",
+            "taskReferenceName": "google_search_rjcfa_ref",
+            "inputParameters": {
+              "search_specification": "${workflow.input.search_specification}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          },
+          {
+            "name": "google_convert",
+            "taskReferenceName": "google_convert",
+            "inputParameters": {
+              "google_search_results": "${google_search_rjcfa_ref.output.search_results}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          }
+        ],
+        "Nubela": [
+          {
+            "name": "nubela_search",
+            "taskReferenceName": "nubela_search_mvxbd_ref",
+            "inputParameters": {
+              "search_specification": "${workflow.input.search_specification}",
+              "enquiry_metadata": "${workflow.input.enquiry_metadata}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          },
+          {
+            "name": "nubela_convert",
+            "taskReferenceName": "nubela_convert",
+            "inputParameters": {
+              "nubela_search_results": "${nubela_search_mvxbd_ref.output.search_results}"
+            },
+            "type": "SIMPLE",
+            "decisionCases": {},
+            "defaultCase": [],
+            "forkTasks": [],
+            "startDelay": 0,
+            "joinOn": [],
+            "optional": false,
+            "defaultExclusiveJoinTask": [],
+            "asyncComplete": false,
+            "loopOver": [],
+            "onStateChange": {}
+          }
+        ]
+      },
+      "defaultCase": [
+        {
+          "name": "unexpected data provider terminate",
+          "taskReferenceName": "unexpected data provider terminate_qjoq4_ref",
+          "inputParameters": {
+            "terminationStatus": "FAILED",
+            "terminationReason": "Unexpected search spec data provider",
+            "workflowOutput": {
+              "SearchSpecification": "${workflow.input.search_specification}"
+            }
+          },
+          "type": "TERMINATE",
+          "decisionCases": {},
+          "defaultCase": [],
+          "forkTasks": [],
+          "startDelay": 0,
+          "joinOn": [],
+          "optional": false,
+          "defaultExclusiveJoinTask": [],
+          "asyncComplete": false,
+          "loopOver": [],
+          "onStateChange": {}
+        }
+      ],
+      "forkTasks": [],
+      "startDelay": 0,
+      "joinOn": [],
+      "optional": false,
+      "defaultExclusiveJoinTask": [],
+      "asyncComplete": false,
+      "loopOver": [],
+      "evaluatorType": "value-param",
+      "expression": "data_provider_value",
+      "onStateChange": {}
+    }
+  ],
+  "inputParameters": [
+    "search_specification",
+    "enquiry_metadata"
+  ],
+  "outputParameters": {
+    "search_result": "${nubela_convert.output} ${google_convert.output} ${open_corporates_convert.output}${sayari_convert.output}${companies_house_convert.output}"
+  },
+  "failureWorkflow": "",
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "james.buddrige@xapien.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {},
+  "onStateChange": {}
+}

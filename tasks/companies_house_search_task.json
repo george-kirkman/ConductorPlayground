@@ -1,0 +1,21 @@
+{
+  "createTime": 1702054904013,
+  "createdBy": "james.buddrige@xapien.com",
+  "name": "companies_house_search",
+  "description": "Mock searcher that returns companies house search results",
+  "retryCount": 3,
+  "timeoutSeconds": 3600,
+  "inputKeys": [],
+  "outputKeys": [],
+  "timeoutPolicy": "TIME_OUT_WF",
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 60,
+  "responseTimeoutSeconds": 600,
+  "concurrentExecLimit": 0,
+  "inputTemplate": {},
+  "rateLimitPerFrequency": 0,
+  "rateLimitFrequencyInSeconds": 1,
+  "ownerEmail": "james.buddrige@xapien.com",
+  "pollTimeoutSeconds": 3600,
+  "backoffScaleFactor": 1
+}
