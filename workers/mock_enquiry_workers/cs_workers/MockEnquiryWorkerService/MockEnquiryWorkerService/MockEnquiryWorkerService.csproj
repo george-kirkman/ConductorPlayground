@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+<!--    <Nullable>disable</Nullable>-->
+    <ImplicitUsings>enable</ImplicitUsings>
+<!--    Don't know how to use this yet vvvv  -->
+<!--  <UserSecretsId>dotnet-MockEnquiryWorkerService-E623BA13-1F26-42DC-A3A2-2E0353A1BC0B</UserSecretsId>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="conductor-csharp" Version="1.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.25" />
+  </ItemGroup>
+</Project>

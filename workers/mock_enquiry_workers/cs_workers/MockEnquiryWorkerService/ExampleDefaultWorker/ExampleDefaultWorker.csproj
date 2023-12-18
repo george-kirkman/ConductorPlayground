@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+<!--    <UserSecretsId>dotnet-ExampleDefaultWorker-75BA85A4-FCB9-4446-A2BB-2B0B8823F51A</UserSecretsId>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="conductor-csharp" Version="1.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.25" />
+  </ItemGroup>
+</Project>
