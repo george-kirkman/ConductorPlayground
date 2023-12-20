@@ -3,6 +3,7 @@ import uuid
 from conductor.client.configuration.settings.authentication_settings import AuthenticationSettings
 from conductor.client.configuration.configuration import Configuration
 from conductor.client.automator.task_handler import TaskHandler
+from conductor.client.orkes.orkes_workflow_client import OrkesWorkflowClient
 from conductor.client.worker.worker import Worker
 
 #### Add these lines if running on a mac####
@@ -26,6 +27,10 @@ configuration = Configuration(
         key_secret=KEY_SECRET
     ),
 )
+
+# workflow_client = OrkesWorkflowClient(configuration)
+# mock_enquiry_input = {"Subject": "David Smith", "Context": "LSEG"}
+# workflow_client.startWorkflowByName("MockEnquiry", mock_enquiry_input)
 
 workers = [
     # SimplePythonWorker(
@@ -82,18 +87,50 @@ workers = [
         poll_interval=1,
         #domain='test' # Not sure what this does yet
     ),
-    # Worker(
-    #     task_definition_name='companieshouse_search',   # expect: Failed to poll task
-    #     execute_function=SearchWorkers.execute_companies_house_search,
-    #     poll_interval=1,
-    #     #domain='test' # Not sure what this does yet
-    # )
     Worker(
         task_definition_name='google_convert',
         execute_function=SearchWorkers.execute_google_convert_search,
         poll_interval=1,
         #domain='test' # Not sure what this does yet
     ),
+    Worker(
+        task_definition_name='sayari_convert',
+        execute_function=SearchWorkers.execute_sayari_convert_search,
+        poll_interval=1,
+        #domain='test' # Not sure what this does yet
+    ),
+    Worker(
+        task_definition_name='nubela_convert',
+        execute_function=SearchWorkers.execute_nubela_convert_search,
+        poll_interval=1,
+        #domain='test' # Not sure what this does yet
+    ),
+    Worker(
+        task_definition_name='open_corporates_convert',
+        execute_function=SearchWorkers.execute_open_corporates_convert_search,
+        poll_interval=1,
+        #domain='test' # Not sure what this does yet
+    ),
+    Worker(
+        task_definition_name='companies_house_convert',
+        execute_function=SearchWorkers.execute_companies_house_convert_search,
+        poll_interval=1,
+        #domain='test' # Not sure what this does yet
+    ),
+    Worker(
+        task_definition_name='report_gen',
+        execute_function=MockEnquiryWorkers.execute_report_gen,
+        poll_interval=1,
+        #domain='test' # Not sure what this does yet
+    ),
+    # <WARNING> expected to fail: Failed to poll task
+    # task_definition_name is not defined on server
+    # Worker(
+    #     task_definition_name='companieshouse_search',
+    #     execute_function=SearchWorkers.execute_companies_house_search,
+    #     poll_interval=1,
+    #     #domain='test' # Not sure what this does yet
+    # )
 ]
 
 # If there are decorated workers in your application, scan_for_annotated_workers should be set

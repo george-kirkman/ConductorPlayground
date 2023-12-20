@@ -1,4 +1,5 @@
 import logging
+import time
 from enum import Enum
 import uuid
 
@@ -153,13 +154,15 @@ class GoogleSearchOutput:
         self.url = url
         self.title = title
         self.summary = summary
+        # self.provider = "google"
 
     def to_dict(self):
         return {
             "search_query": self.search_query,
             "url": self.url,
             "title": self.title,
-            "summary": self.summary
+            "summary": self.summary,
+            # "provider": self.provider
         }
 
 
@@ -182,6 +185,7 @@ class SayariSearchOutput:
         self.url = url
         self.title = title
         self.summary = summary
+        # self.provider = "sayari"
 
 
 class NubelaSearchRequest:  # (linkedin)
@@ -202,6 +206,7 @@ class NubelaSearchOutput:
     def __init__(self, linkedin_search_string: str, url: str):
         self.linkedin_search_string = linkedin_search_string
         self.url = url
+        # self.provider = "nubela"
 
 
 class OpenCorporatesSearchRequest:
@@ -221,6 +226,7 @@ class CompaniesHouseSearchOutput:
         self.ch_search_string = ch_search_string
         self.url = url
         self.id = id
+        # self.provider = "companies_house"
 
 
 class CompaniesHouseSearchRequest:
@@ -240,6 +246,32 @@ class OpenCorporatesSearchOutput:
         self.oc_search_string = oc_search_string
         self.url = url
         self.id = id
+        # self.provider = "open_corporates"
+
+
+class UnifiedSearchOutput:
+    def __init__(self, search_query="", search_id="", url="", title="", summary="", entity_name="", entity_type=""):
+                 # provider=""):
+        self.search_query = search_query
+        self.search_id = search_id
+        self.url = url
+        self.title = title
+        self.summary = summary
+        self.entity_name = entity_name
+        self.entity_type = entity_type
+        # self.provider = provider
+
+    def to_dict(self):
+        return {
+            "search_query": self.search_query,
+            "search_id": self.search_id,
+            "url": self.url,
+            "title": self.title,
+            "summary": self.summary,
+            "entity_name": self.entity_name,
+            "entity_type": self.entity_type,
+            # "provider": self.provider
+        }
 
 
 class MockEnquiryWorkers(WorkerInterface):
@@ -307,6 +339,7 @@ class MockEnquiryWorkers(WorkerInterface):
                 search_request = CompaniesHouseSearchRequest(name, context).to_dict()
             # else:
                 # TODO: log an error
+            print("data provider: ", data_provider)
 
             search_specs.append({
                 "search_specification": {
@@ -327,14 +360,32 @@ class MockEnquiryWorkers(WorkerInterface):
         print("<--- SEARCH-GENERATOR TASK COMPLETE! --->")
         return task_result
 
-    # TODO: Add report_gen execute function
+    @staticmethod
+    def execute_report_gen(task: Task) -> TaskResult:
+        task_input = task.input_data
+        logger.debug("-------- input: ")
+        logger.debug(task_input)
+
+        search_results = task_input['results']
+        search_specifications = task_input['search_specifications']
+        # --- insert specific search logic here ---
+        task_result = TaskResult(
+            task_id=task.task_id,
+            workflow_instance_id=task.workflow_instance_id,
+            worker_id='your_custom_id'
+        )
+
+        task_result.add_output_data('search_results', search_results)
+        task_result.status = TaskResultStatus.COMPLETED
+        print("<--- REPORT-GEN TASK COMPLETE! --->")
+        return task_result
 
 
 class SearchWorkers(WorkerInterface):
     @staticmethod
     def execute_google_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
+        logger.debug("-------- google search input: ")
         logger.debug(task_input)
 
         input_search_spec = task_input['search_specification']
@@ -507,18 +558,26 @@ class SearchWorkers(WorkerInterface):
     @staticmethod
     def execute_google_convert_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
+        logger.debug("-------- google convert input: ")
         logger.debug(task_input)
 
-        search_output = task_input['google_search_results']
+        search_outputs = task_input['google_search_results']
         # --- insert specific search logic here ---
         task_result = TaskResult(
             task_id=task.task_id,
             workflow_instance_id=task.workflow_instance_id,
             worker_id='your_custom_id'
         )
-        # TODO: insert time sleep
-        task_result.add_output_data('convert_results', search_output)
+        # time.sleep(1)   # Sleep for 1 seconds
+        unified_search_outputs = []
+        for search_output in search_outputs:
+            unified_search_outputs.append(UnifiedSearchOutput(
+                                            summary=search_output['summary'],
+                                            search_query=search_output['search_query'],
+                                            title=search_output['title'],
+                                            url=search_output['url'],
+                                        ).to_dict())
+        task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
         print("<--- GOOGLE-CONVERT TASK COMPLETE! --->")
         return task_result
@@ -529,15 +588,25 @@ class SearchWorkers(WorkerInterface):
         logger.debug("-------- input: ")
         logger.debug(task_input)
 
-        search_output = task_input['sayari_search_results']
         # --- insert specific search logic here ---
         task_result = TaskResult(
             task_id=task.task_id,
             workflow_instance_id=task.workflow_instance_id,
             worker_id='your_custom_id'
         )
-        # TODO: insert time sleep
-        task_result.add_output_data('convert_results', search_output)
+
+        search_outputs = task_input['sayari_search_result']
+        unified_search_outputs = []
+        for search_output in search_outputs:
+            unified_search_outputs.append(UnifiedSearchOutput(
+                summary=search_output['summary'],
+                entity_type=search_output['entity_type'],
+                entity_name=search_output['entity_name'],
+                title=search_output['title'],
+                url=search_output['url']
+            ).to_dict())
+
+        task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
         print("<--- SAYARI-CONVERT TASK COMPLETE! --->")
         return task_result
@@ -548,15 +617,21 @@ class SearchWorkers(WorkerInterface):
         logger.debug("-------- input: ")
         logger.debug(task_input)
 
-        search_output = task_input['nubela_search_results']
         # --- insert specific search logic here ---
         task_result = TaskResult(
             task_id=task.task_id,
             workflow_instance_id=task.workflow_instance_id,
             worker_id='your_custom_id'
         )
-        # TODO: insert time sleep
-        task_result.add_output_data('convert_results', search_output)
+        search_outputs = task_input['nubela_search_results']
+        unified_search_outputs = []
+        for search_output in search_outputs:
+            unified_search_outputs.append(UnifiedSearchOutput(
+                search_query=search_output['linkedin_search_string'],
+                url=search_output['url']
+            ).to_dict())
+
+        task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
         print("<--- NUBELA-CONVERT TASK COMPLETE! --->")
         return task_result
@@ -567,15 +642,23 @@ class SearchWorkers(WorkerInterface):
         logger.debug("-------- input: ")
         logger.debug(task_input)
 
-        search_output = task_input['open_corporates_search_results']
         # --- insert specific search logic here ---
         task_result = TaskResult(
             task_id=task.task_id,
             workflow_instance_id=task.workflow_instance_id,
             worker_id='your_custom_id'
         )
-        # TODO: insert time sleep
-        task_result.add_output_data('convert_results', search_output)
+
+        search_outputs = task_input['open_corporates_search_results']
+        unified_search_outputs = []
+        for search_output in search_outputs:
+            unified_search_outputs.append(UnifiedSearchOutput(
+                search_query=search_output['oc_search_string'],
+                search_id=search_output['id'],
+                url=search_output['url']
+            ).to_dict())
+
+        task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
         print("<--- OPEN-CORPORATES-CONVERT TASK COMPLETE! --->")
         return task_result
@@ -586,15 +669,23 @@ class SearchWorkers(WorkerInterface):
         logger.debug("-------- input: ")
         logger.debug(task_input)
 
-        search_output = task_input['companies_house_search_results']
         # --- insert specific search logic here ---
         task_result = TaskResult(
             task_id=task.task_id,
             workflow_instance_id=task.workflow_instance_id,
             worker_id='your_custom_id'
         )
-        # TODO: insert time sleep
-        task_result.add_output_data('convert_results', search_output)
+        search_outputs = task_input['companies_house_search_result']
+        unified_search_outputs = []
+        for search_output in search_outputs:
+            unified_search_outputs.append(UnifiedSearchOutput(
+                search_query=search_output['ch_search_string'],
+                search_id=search_output['id'],
+                url=search_output['url'],
+                # provider=search_output['data_provider']
+            ).to_dict())
+
+        task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
         print("<--- COMPANIES-HOUSE-CONVERT TASK COMPLETE! --->")
         return task_result
