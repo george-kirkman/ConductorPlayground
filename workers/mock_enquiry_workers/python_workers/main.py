@@ -28,9 +28,14 @@ configuration = Configuration(
     ),
 )
 
-# workflow_client = OrkesWorkflowClient(configuration)
-# mock_enquiry_input = {"Subject": "David Smith", "Context": "LSEG"}
-# workflow_client.startWorkflowByName("MockEnquiry", mock_enquiry_input)
+configuration = Configuration(
+    server_api_url='http://localhost:8080/api',
+    debug=True,
+)
+
+workflow_client = OrkesWorkflowClient(configuration)
+mock_enquiry_input = {"Subject": "George Kirkman", "Context": "Xapien"}
+workflow_client.startWorkflowByName("MockEnquiry", mock_enquiry_input)
 
 workers = [
     # SimplePythonWorker(
@@ -54,6 +59,12 @@ workers = [
     Worker(
         task_definition_name='search_generator',
         execute_function=MockEnquiryWorkers.execute_search_generator,
+        poll_interval=1,
+        #domain='test' # Not sure what this does yet
+    ),
+    Worker(
+        task_definition_name='create_dynamic_workflow_json',
+        execute_function=MockEnquiryWorkers.create_dynamic_workflow_json,
         poll_interval=1,
         #domain='test' # Not sure what this does yet
     ),

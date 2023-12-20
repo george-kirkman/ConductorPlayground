@@ -361,6 +361,38 @@ class MockEnquiryWorkers(WorkerInterface):
         return task_result
 
     @staticmethod
+    def create_dynamic_workflow_json(task: Task) -> TaskResult:
+        task_input = task.input_data
+        logger.debug("-------- create dynamic workflow json input: ")
+        logger.debug(task_input)
+
+        search_specifications = task_input['search_specifications']
+        task_result = TaskResult(
+            task_id=task.task_id,
+            workflow_instance_id=task.workflow_instance_id,
+            worker_id='your_custom_id'
+        )
+        # time.sleep(1)   # Sleep for 1 seconds
+        dynamic_tasks = []
+        dynamic_tasks_input = {}
+        for i, spec in enumerate(search_specifications):
+            task_ref = "run_collection_subworkflow_" + str(i)
+            subWorkflow = {
+                "subWorkflowParam": {
+                    "name": "CollectionRunnerFlow"
+                },
+                "type": "SUB_WORKFLOW",
+                "taskReferenceName": task_ref,
+            }
+            dynamic_tasks.append(subWorkflow)
+            dynamic_tasks_input[task_ref] = spec
+        task_result.add_output_data('dynamicTasks', dynamic_tasks)
+        task_result.add_output_data('dynamicTasksInput', dynamic_tasks_input)
+        task_result.status = TaskResultStatus.COMPLETED
+        print("<--- GENERATE DYNAMIC TASKS JSON TASK COMPLETE! --->")
+        return task_result
+
+    @staticmethod
     def execute_report_gen(task: Task) -> TaskResult:
         task_input = task.input_data
         logger.debug("-------- input: ")
