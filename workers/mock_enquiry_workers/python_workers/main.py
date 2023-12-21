@@ -35,7 +35,8 @@ configuration = Configuration(
 
 workflow_client = OrkesWorkflowClient(configuration)
 mock_enquiry_input = {"Subject": "George Kirkman", "Context": "Xapien"}
-workflow_client.startWorkflowByName("MockEnquiry", mock_enquiry_input)
+
+workflowExecId = workflow_client.startWorkflowByName("MockEnquiry", mock_enquiry_input)
 
 workers = [
     # SimplePythonWorker(
@@ -154,7 +155,12 @@ with TaskHandler(workers, configuration, scan_for_annotated_workers=False) as ta
     input("Press enter to exit")
     print("ended processes")
 
-
+workflow_execution = workflow_client.getWorkflow(workflowExecId)
+for task in workflow_execution.tasks:
+    print("===========================")
+    # can look at task stuff here - look at docs (or inspect getWorkflow implementation) to see what fields there are
+    
+    
 # from conductor.client.worker.worker_task import WorkerTask
 
 # @WorkerTask(task_definition_name='python_annotated_task', worker_id='decorated', poll_interval=200.0)
