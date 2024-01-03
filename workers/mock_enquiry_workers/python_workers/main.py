@@ -28,6 +28,7 @@ configuration = Configuration(
     ),
 )
 
+# uncomment this if working on local server
 configuration = Configuration(
     server_api_url='http://localhost:8080/api',
     debug=True,
@@ -49,115 +50,101 @@ workers = [
     #     task_definition_name='CheckIsOver18',
     #     execute_function=SimplePythonWorker.is_over_18_using_task_input,
     #     poll_interval=1,
-    #     #domain='test' # Not sure what this does yet
+    #  
     # ),
     Worker(
         task_definition_name='initialise_enquiry',
         execute_function=MockEnquiryWorkers.execute_initialise_enquiry,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='search_generator',
         execute_function=MockEnquiryWorkers.execute_search_generator,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='create_dynamic_workflow_json',
         execute_function=MockEnquiryWorkers.create_dynamic_workflow_json,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='google_search',
         execute_function=SearchWorkers.execute_google_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='sayari_search',
         execute_function=SearchWorkers.execute_sayari_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='nubela_search',
         execute_function=SearchWorkers.execute_nubela_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='open_corporates_search',
         execute_function=SearchWorkers.execute_open_corporates_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='companies_house_search',
         execute_function=SearchWorkers.execute_companies_house_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='google_convert',
         execute_function=SearchWorkers.execute_google_convert_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='sayari_convert',
         execute_function=SearchWorkers.execute_sayari_convert_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='nubela_convert',
         execute_function=SearchWorkers.execute_nubela_convert_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='open_corporates_convert',
         execute_function=SearchWorkers.execute_open_corporates_convert_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='companies_house_convert',
         execute_function=SearchWorkers.execute_companies_house_convert_search,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     Worker(
         task_definition_name='report_gen',
         execute_function=MockEnquiryWorkers.execute_report_gen,
-        poll_interval=1,
-        #domain='test' # Not sure what this does yet
+        poll_interval=0.01,
     ),
     # <WARNING> expected to fail: Failed to poll task
     # task_definition_name is not defined on server
     # Worker(
     #     task_definition_name='companieshouse_search',
     #     execute_function=SearchWorkers.execute_companies_house_search,
-    #     poll_interval=1,
-    #     #domain='test' # Not sure what this does yet
+    #     poll_interval=0.01,
+    #  
     # )
 ]
 
 # If there are decorated workers in your application, scan_for_annotated_workers should be set
 # default value of scan_for_annotated_workers is False
-with TaskHandler(workers, configuration, scan_for_annotated_workers=False) as task_handler:
+with TaskHandler(workers, configuration, scan_for_annotated_workers=False) as task_handler: #metrics_settings=metrics_settings,
     print("starting processes")
-    for worker in workers:
-        print(worker.task_definition_name)
+    #for worker in workers:
+        #print(worker.task_definition_name)
     task_handler.start_processes()
     input("Press enter to exit")
     print("ended processes")
 
-workflow_execution = workflow_client.getWorkflow(workflowExecId)
-for task in workflow_execution.tasks:
-    print("===========================")
+# workflow_execution = workflow_client.getWorkflow(workflowExecId)
+# for task in workflow_execution.tasks:
+#     print("===========================")
     # can look at task stuff here - look at docs (or inspect getWorkflow implementation) to see what fields there are
     
     

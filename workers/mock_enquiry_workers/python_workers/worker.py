@@ -8,18 +8,18 @@ from conductor.client.http.models import Task, TaskResult
 from conductor.client.http.models.task_result_status import TaskResultStatus
 from conductor.client.worker.worker_interface import WorkerInterface
 
-logger = logging.getLogger(
-    Configuration.get_logging_formatted_name(
-        __name__
-    )
-)
+# logger = logging.getLogger(
+#     Configuration.get_logging_formatted_name(
+#         __name__
+#     )
+# )
 
 
 class SimplePythonWorker(WorkerInterface):
     def execute(self, task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+        # logger.debug("-------- input: ")
+        # logger.debug(task_input)
         age = task_input['Age']
         isover18 = True if age > 18 else False
         task_result = self.get_task_result_from_task(task)
@@ -34,8 +34,8 @@ class SimplePythonWorker(WorkerInterface):
     @staticmethod
     def is_over_18_using_task_input(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
         age = task_input['Age']
         isover18 = True if age > 18 else False
         task_result = TaskResult(
@@ -47,15 +47,15 @@ class SimplePythonWorker(WorkerInterface):
         task_result.status = TaskResultStatus.COMPLETED
         return task_result
 
-    # THIS ONE DOES NOT WORK¬!!!!! CONDUCT|oR STOOPID 
+    # THIS ONE DOES NOT WORK!!! 
     # worker/worker.py Line 68 doesn't use the correct input.
     # should be task_result.output_data = self.execute_function(execute_function_input)
 
     # So for now, we're gonna avoid this usage. Might raise a PR! :)
     @staticmethod
     def is_over_18_using_input_object(task_input) -> dict[str, bool]:
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
         age = task_input['Age']
         isover18 = True if age > 18 else False
         result = {"IsOver18": isover18}
@@ -69,8 +69,8 @@ class SimplePythonWorker(WorkerInterface):
 class BarBouncer(WorkerInterface):
     def execute(self, task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
         isover18_result = task_input["IsOver18"]
         isOver18 = isover18_result["IsOver18"]
         if isOver18:
@@ -79,7 +79,7 @@ class BarBouncer(WorkerInterface):
             message = "Please leave. I don't like you >:( You are TOO YOUNG!"
         task_result = self.get_task_result_from_task(task)
         task_result.add_output_data("BarGreetings", message)
-        logger.debug("--------------Bar Bouncer happened!")
+#         logger.debug("--------------Bar Bouncer happened!")
         task_result.status = TaskResultStatus.COMPLETED
         return task_result
 
@@ -278,8 +278,8 @@ class MockEnquiryWorkers(WorkerInterface):
     @staticmethod
     def execute_initialise_enquiry(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         enquiry_id = str(uuid.uuid4())
         subject = {'item': task_input['Subject'],
@@ -296,16 +296,17 @@ class MockEnquiryWorkers(WorkerInterface):
         task_result.add_output_data('subject', subject)
         task_result.add_output_data('context', context)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- INTIALISE-ENQUIRY TASK COMPLETE! --->")
-        print(task_result.output_data)
+        #print("<--- INTIALISE-ENQUIRY TASK COMPLETE! --->")
+        #print(task_result.output_data)
         return task_result
 
     @staticmethod
     def execute_search_generator(task: Task) -> TaskResult:
         task_input = task.input_data
         enq_metadata = task_input['enquiry_metadata']
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+        #time.sleep(20)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         data_providers = ['Nubela',
                           'Google',
@@ -315,39 +316,40 @@ class MockEnquiryWorkers(WorkerInterface):
                           # 'Bing'] # created as test to hit: unexpected data provider terminate
 
         search_specs = []
-        for data_provider in data_providers:
-            search_name_context_request = enq_metadata['subject']['item'] + " " + enq_metadata['context']['item']
-            if data_provider == "Google":   # or data_provider == "Bing":
-                search_query = search_name_context_request
-                search_request = GoogleSearchRequest(search_query).to_dict()
-            elif data_provider == "Sayari":
-                name = enq_metadata['subject']['item']
-                type = enq_metadata['subject']['type']
-                search_request = SayariSearchRequest(name, type).to_dict()
-            elif data_provider == "Nubela":
-                name = enq_metadata['subject']['item']
-                type = enq_metadata['subject']['type']
-                context = "" if enq_metadata['context']['type'] == "Person" else enq_metadata['context']['item']
-                search_request = NubelaSearchRequest(name, type, context).to_dict()
-            elif data_provider == "OpenCorporates":
-                name = enq_metadata['subject']['item']
-                context = enq_metadata['context']['item']
-                search_request = OpenCorporatesSearchRequest(name, context).to_dict()
-            elif data_provider == "CompaniesHouse":
-                name = enq_metadata['subject']['item']
-                context = enq_metadata['context']['item']
-                search_request = CompaniesHouseSearchRequest(name, context).to_dict()
-            # else:
-                # TODO: log an error
-            print("data provider: ", data_provider)
-
-            search_specs.append({
-                "search_specification": {
-                    # should be Enum: DataProvider
-                    "data_provider": data_provider,
-                    "search_request": search_request
-                }
-            })
+        for i in range(100):
+            for data_provider in data_providers:
+                search_name_context_request = enq_metadata['subject']['item'] + " " + enq_metadata['context']['item']
+                if data_provider == "Google":   # or data_provider == "Bing":
+                    search_query = search_name_context_request
+                    search_request = GoogleSearchRequest(search_query).to_dict()
+                elif data_provider == "Sayari":
+                    name = enq_metadata['subject']['item']
+                    type = enq_metadata['subject']['type']
+                    search_request = SayariSearchRequest(name, type).to_dict()
+                elif data_provider == "Nubela":
+                    name = enq_metadata['subject']['item']
+                    type = enq_metadata['subject']['type']
+                    context = "" if enq_metadata['context']['type'] == "Person" else enq_metadata['context']['item']
+                    search_request = NubelaSearchRequest(name, type, context).to_dict()
+                elif data_provider == "OpenCorporates":
+                    name = enq_metadata['subject']['item']
+                    context = enq_metadata['context']['item']
+                    search_request = OpenCorporatesSearchRequest(name, context).to_dict()
+                elif data_provider == "CompaniesHouse":
+                    name = enq_metadata['subject']['item']
+                    context = enq_metadata['context']['item']
+                    search_request = CompaniesHouseSearchRequest(name, context).to_dict()
+                # else:
+                    # TODO: log an error
+                #print("data provider: ", data_provider)
+    
+                search_specs.append({
+                    "search_specification": {
+                        # should be Enum: DataProvider
+                        "data_provider": data_provider,
+                        "search_request": search_request
+                    }
+                })
 
         task_result = TaskResult(
             task_id=task.task_id,
@@ -357,14 +359,14 @@ class MockEnquiryWorkers(WorkerInterface):
         task_result.add_output_data('enquiry_metadata', enq_metadata)
         task_result.add_output_data('search_specifications', search_specs)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- SEARCH-GENERATOR TASK COMPLETE! --->")
+        #print("<--- SEARCH-GENERATOR TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def create_dynamic_workflow_json(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- create dynamic workflow json input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- create dynamic workflow json input: ")
+#         logger.debug(task_input)
 
         search_specifications = task_input['search_specifications']
         task_result = TaskResult(
@@ -389,14 +391,14 @@ class MockEnquiryWorkers(WorkerInterface):
         task_result.add_output_data('dynamicTasks', dynamic_tasks)
         task_result.add_output_data('dynamicTasksInput', dynamic_tasks_input)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- GENERATE DYNAMIC TASKS JSON TASK COMPLETE! --->")
+        #print("<--- GENERATE DYNAMIC TASKS JSON TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_report_gen(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         search_results = task_input['results']
         search_specifications = task_input['search_specifications']
@@ -409,7 +411,7 @@ class MockEnquiryWorkers(WorkerInterface):
 
         task_result.add_output_data('search_results', search_results)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- REPORT-GEN TASK COMPLETE! --->")
+        #print("<--- REPORT-GEN TASK COMPLETE! --->")
         return task_result
 
 
@@ -417,8 +419,8 @@ class SearchWorkers(WorkerInterface):
     @staticmethod
     def execute_google_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- google search input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- google search input: ")
+#         logger.debug(task_input)
 
         input_search_spec = task_input['search_specification']
         input_search_query = input_search_spec['search_request']['query']
@@ -458,14 +460,14 @@ class SearchWorkers(WorkerInterface):
         # task_result.add_output_data('enquiry_metadata', task_input)
         task_result.add_output_data('search_results', search_results)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- GOOGLE-SEARCH TASK COMPLETE! --->")
+        #print("<--- GOOGLE-SEARCH TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_sayari_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         input_search_spec = task_input['search_specification']
         input_search_request = input_search_spec['search_request']
@@ -498,14 +500,14 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('search_results', search_results)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- SAYARI-SEARCH TASK COMPLETE! --->")
+        #print("<--- SAYARI-SEARCH TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_nubela_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         input_search_spec = task_input['search_specification']
         input_search_request = input_search_spec['search_request']
@@ -526,14 +528,14 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('search_results', search_results)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- NUBELA-SEARCH TASK COMPLETE! --->")
+        #print("<--- NUBELA-SEARCH TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_open_corporates_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         input_search_spec = task_input['search_specification']
         input_search_request = input_search_spec['search_request']
@@ -555,14 +557,14 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('search_results', search_results)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- OPENCORPORATES-SEARCH TASK COMPLETE! --->")
+        #print("<--- OPENCORPORATES-SEARCH TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_companies_house_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         input_search_spec = task_input['search_specification']
         input_search_request = input_search_spec['search_request']
@@ -584,14 +586,14 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('search_results', search_results)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- COMPANIESHOUSE-SEARCH TASK COMPLETE! --->")
+        #print("<--- COMPANIESHOUSE-SEARCH TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_google_convert_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- google convert input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- google convert input: ")
+#         logger.debug(task_input)
 
         search_outputs = task_input['google_search_results']
         # --- insert specific search logic here ---
@@ -611,14 +613,14 @@ class SearchWorkers(WorkerInterface):
                                         ).to_dict())
         task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- GOOGLE-CONVERT TASK COMPLETE! --->")
+        #print("<--- GOOGLE-CONVERT TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_sayari_convert_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         # --- insert specific search logic here ---
         task_result = TaskResult(
@@ -640,14 +642,14 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- SAYARI-CONVERT TASK COMPLETE! --->")
+        #print("<--- SAYARI-CONVERT TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_nubela_convert_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         # --- insert specific search logic here ---
         task_result = TaskResult(
@@ -665,14 +667,14 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- NUBELA-CONVERT TASK COMPLETE! --->")
+        #print("<--- NUBELA-CONVERT TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_open_corporates_convert_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         # --- insert specific search logic here ---
         task_result = TaskResult(
@@ -692,14 +694,14 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- OPEN-CORPORATES-CONVERT TASK COMPLETE! --->")
+        #print("<--- OPEN-CORPORATES-CONVERT TASK COMPLETE! --->")
         return task_result
 
     @staticmethod
     def execute_companies_house_convert_search(task: Task) -> TaskResult:
         task_input = task.input_data
-        logger.debug("-------- input: ")
-        logger.debug(task_input)
+#         logger.debug("-------- input: ")
+#         logger.debug(task_input)
 
         # --- insert specific search logic here ---
         task_result = TaskResult(
@@ -719,7 +721,7 @@ class SearchWorkers(WorkerInterface):
 
         task_result.add_output_data('convert_results', unified_search_outputs)
         task_result.status = TaskResultStatus.COMPLETED
-        print("<--- COMPANIES-HOUSE-CONVERT TASK COMPLETE! --->")
+        #print("<--- COMPANIES-HOUSE-CONVERT TASK COMPLETE! --->")
         return task_result
 
     def get_polling_interval_in_seconds(self) -> float:
