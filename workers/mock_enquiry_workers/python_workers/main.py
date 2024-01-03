@@ -1,8 +1,10 @@
 import uuid
+import os
 
 from conductor.client.configuration.settings.authentication_settings import AuthenticationSettings
 from conductor.client.configuration.configuration import Configuration
 from conductor.client.automator.task_handler import TaskHandler
+from dotenv import load_dotenv
 from conductor.client.orkes.orkes_workflow_client import OrkesWorkflowClient
 from conductor.client.worker.worker import Worker
 
@@ -16,8 +18,9 @@ set_start_method('fork')
 ############################################
 
 SERVER_API_URL = 'https://play.orkes.io/api'
-KEY_ID = "4af1da52-28d5-489c-b9b1-b7ffc32a0fe8"
-KEY_SECRET = "fLm9JZ1d5pnBxmtOXnaGiea6u84SQ1u8TaNvxjwx2FcHdCDS"
+load_dotenv()
+KEY_ID = os.getenv("KEY_ID")
+KEY_SECRET = os.getenv("KEY_SECRET")
 
 configuration = Configuration(
     server_api_url=SERVER_API_URL,

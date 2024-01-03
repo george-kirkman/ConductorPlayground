@@ -1,0 +1,2 @@
+conductor-python==1.0.73
+python-dotenv==1.0.0

@@ -4,18 +4,22 @@ using Conductor.Client.Extensions;
 using Conductor.Client.Interfaces;
 using Conductor.Client.Models;
 using Conductor.Executor;
+using Microsoft.AspNetCore.Builder;
 using MockEnquiryWorkerService;
 using MockEnquiryWorkerService.Models;
 using MockEnquiryWorkerService.WorkflowTasks;
 using Newtonsoft.Json.Serialization;
 using Microsoft.Extensions.Logging;
 
-
+var builder = WebApplication.CreateBuilder(args);
+var orkesApiKey = builder.Configuration["OrkesAuth:KeyId"];
+var orkesApiSecret = builder.Configuration["OrkesAuth:KeySecret"];
 var config1 = new Configuration()
 {
-    AuthenticationSettings = new OrkesAuthenticationSettings("4af1da52-28d5-489c-b9b1-b7ffc32a0fe8",
-        "fLm9JZ1d5pnBxmtOXnaGiea6u84SQ1u8TaNvxjwx2FcHdCDS"),
-    
+    AuthenticationSettings = new OrkesAuthenticationSettings(
+        orkesApiKey,
+        orkesApiSecret
+    ),
     //BasePath = "http://localhost:8080/api"
 };
 
